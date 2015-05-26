@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Título:</strong>
+  <%= @task.title %>
+</p>
+
+<p>
+  <strong>Descrição:</strong>
+  <%= @task.description %>
+</p>
+
+<p>
+  <strong>Público?</strong>
+  <%= @task.public %>
+</p>
+
+<h2>Subtasks:</h2>
+<% if @task.user_id == current_user.id then %>
+	<%= form_for([@task, @task.subtasks.build], remote: true) do |f| %>
+	  <p>
+	    <%= f.label :title %><br>
+	    <%= f.text_field :title %>
+	  </p>
+	  <p>
+	    <%= f.submit %>
+	  </p>
+	<% end %>
+<% end %>
+<div id="subtasks">
+	<%= render 'subtasks/subtasks'%>
+</div>
+<% content_for :js do %>
+	function remove_comentario(id)
+	{
+		$('#remove-subtask-'+id).bind('ajax:success', function(){
+			$('#subtask-'+id).remove();
+		});
+	}
+
+	$('.remove-subtasks').bind('click', function(){
+		remove_comentario($(this).attr('id').substr(15));
+	});
+
+	$('form').bind('ajax:complete', function(){
+		alert('afafa');
+		$('#subtasks').replaceWith(result.responseText);
+	});
+<%end%>
+<% if @task.user_id == current_user.id then %>
+<%= link_to 'Edit', edit_task_path(@task) %> |
+<% end %>
+<%= link_to 'Back', tasks_path %>

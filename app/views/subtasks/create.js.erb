@@ -1,0 +1,19 @@
+<%= subtasks @subtask.index%>
+
+<% if @task.subtasks.count > 0 then %>
+	<ul>
+		<% @task.subtasks.each do |subtask|%>
+			<li id="subtask-<%=subtask.id%>"><%= subtask.title%> (
+				<%= link_to "Remover", [subtask.task, subtask],
+					method: :delete,
+					data: {
+						confirm:"Tem certeza que deseja deletar?"
+					},
+					id: "remove-subtask-#{subtask.id}",
+					class: 'remove-subtasks',
+					remote: true
+				%>)
+			</li>
+		<% end %>
+	</ul>
+<% end %>
